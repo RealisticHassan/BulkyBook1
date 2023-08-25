@@ -1,4 +1,6 @@
-using BulkyBookWeb.Data;
+using BulkyBook.DataAccess.Repository;
+using BulkyBook.DataAccess.Repository.IRepository;
+using BulkyBookWeb.DataAccess;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,7 +8,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(
-builder.Configuration.GetConnectionString("DefaultConnectionString")));
+builder.Configuration.GetConnectionString("DefaultConnectionString")
+
+));
+
+//  Register the Category Repository
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();//thats means jb b ICategoryRepostory ka obj create ho ga tou ye hmain CategoryRepository ki Implementtation de gi
+
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
 var app = builder.Build();
@@ -28,6 +36,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
